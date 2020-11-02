@@ -5,23 +5,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrentSolution implements RailTransportProblem {
-    private static final int THREAD_AMOUNT = 8;
+    private static final int MAX_THREAD_AMOUNT = 8;
     private final ExecutorCompletionService<Void> executor =
-        new ExecutorCompletionService<>(Executors.newFixedThreadPool(THREAD_AMOUNT));
+        new ExecutorCompletionService<>(Executors.newFixedThreadPool(MAX_THREAD_AMOUNT));
 
     @Override
-    public String execute(List<Integer> tracks, List<List<Integer>> items) throws InterruptedException {
+    public String execute(
+        final List<Integer> tracks,
+        final List<List<Integer>> items
+    ) throws InterruptedException {
         final var computedItemLengths = new int[items.size()];
         final var trackLengthsFromOrigin = computeTrackLengths(tracks);
 
         final var atomicCurrentItemIndex = new AtomicInteger(0);
         final int itemsSize = items.size();
 
-        fillThreadPool(() -> {
+        computeSolution(() -> {
             int currentItemIndex;
 
             while(true) {
@@ -37,16 +39,16 @@ public class ConcurrentSolution implements RailTransportProblem {
                 final int itemStart = trackLengthsFromOrigin.get(itemTuple.get(0));
                 computedItemLengths[currentItemIndex] = Math.abs(itemEnd - itemStart);
             }
-        }, Math.min(THREAD_AMOUNT, itemsSize));
+        }, Math.min(MAX_THREAD_AMOUNT, itemsSize));
 
         return Arrays.toString(computedItemLengths);
     }
 
-    private List<Integer> computeTrackLengths(List<Integer> tracks) {
-        var trackLengthsFromOrigin = new ArrayList<Integer>(tracks.size());
+    private List<Integer> computeTrackLengths(final List<Integer> tracks) {
+        final var trackLengthsFromOrigin = new ArrayList<Integer>(tracks.size());
 
         int currentTrackLength = 0;
-        for(var track: tracks) {
+        for(final var track: tracks) {
             currentTrackLength += track;
             trackLengthsFromOrigin.add(currentTrackLength);
         }
@@ -54,14 +56,13 @@ public class ConcurrentSolution implements RailTransportProblem {
         return trackLengthsFromOrigin;
     }
 
-    private void fillThreadPool(
-        final Runnable threadedCallback,
-        final int taskAmount
+    private void computeSolution(
+        final Runnable callback,
+        final int amountOfThreads
     ) throws InterruptedException {
-        for(int i = 0; i < taskAmount; ++i) {
-            executor.submit(threadedCallback, null);
+        for(int i = 0; i < amountOfThreads; ++i) {
+            executor.submit(callback, null);
         }
-
         executor.take();
     }
 }
