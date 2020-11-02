@@ -19,9 +19,10 @@ public class RunAlgo {
             List.of(0, 4),
             List.of(3, 5));
 
-        final RailTransportProblem algorithm = new ConcurrentSolution();
+        final ConcurrentSolution algorithm = new ConcurrentSolution();
 
         System.out.println(algorithm.execute(tracks, items));
         System.out.println(algorithm.execute(tracks, items2));
+        System.exit(0);
     }
 }
