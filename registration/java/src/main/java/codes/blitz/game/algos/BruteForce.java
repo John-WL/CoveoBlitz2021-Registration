@@ -5,7 +5,7 @@ import java.util.List;
 
 public class BruteForce implements RailTransportProblem {
     @Override
-    public List<Integer> execute(List<Integer> tracks, List<List<Integer>> items) {
+    public String execute(List<Integer> tracks, List<List<Integer>> items) {
     List<Integer> computedLengths = new ArrayList<>(items.size());
 
     for(int i = 0; i < items.size(); i++) {
@@ -18,6 +18,6 @@ public class BruteForce implements RailTransportProblem {
         computedLengths.add(lengthSum);
     }
 
-    return computedLengths;
+    return computedLengths.toString();
     }
 }

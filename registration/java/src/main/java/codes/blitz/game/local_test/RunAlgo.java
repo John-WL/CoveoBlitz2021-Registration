@@ -1,36 +1,27 @@
 package codes.blitz.game.local_test;
 
 import codes.blitz.game.algos.RailTransportProblem;
-import codes.blitz.game.algos.concurrency.ConcurrentSolution;
+import codes.blitz.game.algos.ConcurrentSolution;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RunAlgo {
+    public static void main(String[] args) throws Exception {
+        final var tracks = List.of(0, 3, 4, 5, 4, 17);
+        final var items = List.of(
+            List.of(0, 1),
+            List.of(0, 3),
+            List.of(1, 4),
+            List.of(4, 3),
+            List.of(4, 2));
 
-    public static void main(String [] args) {
-        List<Integer> tracks = new ArrayList<>();
-        tracks.add(0);
-        tracks.add(3);
-        tracks.add(4);
-        tracks.add(5);
-        tracks.add(4);
-        List<List<Integer>> items = new ArrayList<>();
-        items.add(new ArrayList<>());
-        items.get(0).add(0);
-        items.get(0).add(1);
-        items.add(new ArrayList<>());
-        items.get(1).add(0);
-        items.get(1).add(3);
-        items.add(new ArrayList<>());
-        items.get(2).add(1);
-        items.get(2).add(4);
-        items.add(new ArrayList<>());
-        items.get(3).add(4);
-        items.get(3).add(3);
+        final var items2 = List.of(
+            List.of(0, 4),
+            List.of(3, 5));
 
-        RailTransportProblem algorithm = new ConcurrentSolution();
+        final RailTransportProblem algorithm = new ConcurrentSolution();
 
         System.out.println(algorithm.execute(tracks, items));
+        System.out.println(algorithm.execute(tracks, items2));
     }
 }

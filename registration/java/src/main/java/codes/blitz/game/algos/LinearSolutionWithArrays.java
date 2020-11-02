@@ -8,7 +8,7 @@ import java.util.List;
 public class LinearSolutionWithArrays implements RailTransportProblem {
 
     @Override
-    public List<Integer> execute(List<Integer> tracks, List<List<Integer>> items) {
+    public String execute(List<Integer> tracks, List<List<Integer>> items) {
         Integer[] computedLengths = new Integer[items.size()];
         int[] trackLengthsFromOrigin = new int[tracks.size()];
         int currentTrackLength = 0;
@@ -24,6 +24,6 @@ public class LinearSolutionWithArrays implements RailTransportProblem {
                             - trackLengthsFromOrigin[items.get(i).get(0)]);
         }
 
-        return Arrays.asList(computedLengths);
+        return Arrays.toString(computedLengths);
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public class OverheadLinearSolution implements RailTransportProblem {
 
     @Override
-    public List<Integer> execute(List<Integer> tracks, List<List<Integer>> items) {
+    public String execute(List<Integer> tracks, List<List<Integer>> items) {
         List<Integer> computedLengths = new ArrayList<>(items.size());
         List<Integer> trackLengthsFromOrigin = new ArrayList<>(tracks.size());
         int currentTrackLength = 0;
@@ -27,6 +27,6 @@ public class OverheadLinearSolution implements RailTransportProblem {
             );
         }
 
-        return computedLengths;
+        return computedLengths.toString();
     }
 }
