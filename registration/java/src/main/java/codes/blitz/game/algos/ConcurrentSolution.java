@@ -15,12 +15,11 @@ public class ConcurrentSolution implements RailTransportProblem {
 
     @Override
     public String execute(List<Integer> tracks, List<List<Integer>> items) throws InterruptedException {
-        final var computedLengths = new int[items.size()];
+        final var computedItemLengths = new int[items.size()];
         final var trackLengthsFromOrigin = computeTrackLengths(tracks);
 
         final var atomicCurrentItemIndex = new AtomicInteger(0);
         final int itemsSize = items.size();
-        final var areLengthsComputed = new AtomicBoolean(false);
 
         fillThreadPool(() -> {
             int currentItemIndex;
@@ -30,29 +29,17 @@ public class ConcurrentSolution implements RailTransportProblem {
                     currentItemIndex = atomicCurrentItemIndex.getAndIncrement();
                 }
                 if(currentItemIndex >= itemsSize) {
-                    areLengthsComputed.set(true);
                     return;
                 }
 
                 final var itemTuple = items.get(currentItemIndex);
                 final int itemEnd = trackLengthsFromOrigin.get(itemTuple.get(1));
                 final int itemStart = trackLengthsFromOrigin.get(itemTuple.get(0));
-                computedLengths[currentItemIndex] = Math.abs(itemEnd - itemStart);
+                computedItemLengths[currentItemIndex] = Math.abs(itemEnd - itemStart);
             }
         }, Math.min(THREAD_AMOUNT, itemsSize));
 
-        return Arrays.toString(computedLengths);
-    }
-
-    private void fillThreadPool(
-        final Runnable threadedCallback,
-        final int taskAmount
-    ) throws InterruptedException {
-        for(int i = 0; i < taskAmount; ++i) {
-            executor.submit(threadedCallback, null);
-        }
-
-        executor.take();
+        return Arrays.toString(computedItemLengths);
     }
 
     private List<Integer> computeTrackLengths(List<Integer> tracks) {
@@ -65,5 +52,16 @@ public class ConcurrentSolution implements RailTransportProblem {
         }
 
         return trackLengthsFromOrigin;
+    }
+
+    private void fillThreadPool(
+        final Runnable threadedCallback,
+        final int taskAmount
+    ) throws InterruptedException {
+        for(int i = 0; i < taskAmount; ++i) {
+            executor.submit(threadedCallback, null);
+        }
+
+        executor.take();
     }
 }
