@@ -1,7 +1,6 @@
 package codes.blitz.game.algos;
 
 import java.util.ArrayList;
-import java.util.List;
 
 // Solution in O(N)
 // It does A LOT of overhead
@@ -10,23 +9,11 @@ import java.util.List;
 public class OverheadLinearSolution implements RailTransportProblem {
 
     @Override
-    public String execute(List<Integer> tracks, List<List<Integer>> items) {
-        List<Integer> computedLengths = new ArrayList<>(items.size());
-        List<Integer> trackLengthsFromOrigin = new ArrayList<>(tracks.size());
-        int currentTrackLength = 0;
+    public String execute(final AlgorithmInput input) {
+        input.updateTracksToLengths();
 
-        for(var track: tracks) {
-            currentTrackLength += track;
-            trackLengthsFromOrigin.add(currentTrackLength);
-        }
-
-        for(var item: items) {
-            computedLengths.add(
-                    Math.abs(trackLengthsFromOrigin.get(item.get(1))
-                            - trackLengthsFromOrigin.get(item.get(0)))
-            );
-        }
-
+        final var computedLengths = new ArrayList<Integer>(input.items.size());
+        input.computeLengths((index, value) -> computedLengths.add(value));
         return computedLengths.toString();
     }
 }

@@ -5,15 +5,15 @@ import java.util.List;
 
 public class BruteForce implements RailTransportProblem {
     @Override
-    public String execute(List<Integer> tracks, List<List<Integer>> items) {
-    List<Integer> computedLengths = new ArrayList<>(items.size());
+    public String execute(final AlgorithmInput input) {
+    List<Integer> computedLengths = new ArrayList<>(input.items.size());
 
-    for(int i = 0; i < items.size(); i++) {
+    for(int i = 0; i < input.items.size(); i++) {
         int lengthSum = 0;
-        int smallerIndex = Math.min(items.get(i).get(0), items.get(i).get(1));
-        int biggerIndex = Math.max(items.get(i).get(0), items.get(i).get(1));
+        int smallerIndex = Math.min(input.items.get(i).get(0), input.items.get(i).get(1));
+        int biggerIndex = Math.max(input.items.get(i).get(0), input.items.get(i).get(1));
         for(int j = smallerIndex+1; j <= biggerIndex; j++) {
-            lengthSum += tracks.get(j);
+            lengthSum += input.track.get(j);
         }
         computedLengths.add(lengthSum);
     }
